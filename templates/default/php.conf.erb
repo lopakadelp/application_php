@@ -3,10 +3,6 @@
   ServerAlias <% @params[:server_aliases].each do |a| %><%= "#{a}" %> <% end %>
   DocumentRoot <%= @params[:docroot] %>
   RewriteEngine On
-<% unless node['apache']['version'] == '2.4' %>
-  RewriteLog <%= node[:apache][:log_dir] %>/<%= @application_name %>-rewrite.log
-  RewriteLogLevel 0
-<% end %>
 
   <Directory <%= @params[:docroot] %>>
     Options FollowSymLinks
@@ -39,4 +35,9 @@
   LogLevel info <%= 'rewrite:error' if node['apache']['version'] == '2.4' %>
   ErrorLog <%= node[:apache][:log_dir] %>/<%= @params[:name] %>-error.log
   CustomLog <%= node[:apache][:log_dir] %>/<%= @params[:name] %>-access.log combined
+
+<% unless node['apache']['version'] == '2.4' %>
+  RewriteLog <%= node[:apache][:log_dir] %>/<%= @application_name %>-rewrite.log
+  RewriteLogLevel 0
+<% end %>
 </VirtualHost>
