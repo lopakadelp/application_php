@@ -6,7 +6,7 @@
 
   <Directory <%= @params[:docroot] %>>
     Options FollowSymLinks
-    AllowOverride None
+    AllowOverride <%= [@params[:allow_override] || "None" ].flatten.join " " %>
 <% if node['apache']['version'] == '2.4' %>
     Require all granted
 <% else %>
