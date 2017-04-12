@@ -34,22 +34,21 @@ def create_configuration_files
   new_resource.database[:host] = host if host
 
   template "#{new_resource.path}/shared/database.php" do
-    source new_resource.database_template || "cakephp/database.php.erb"
-    cookbook new_resource.database_template ? new_resource.cookbook_name.to_s : "application_php"
+    source new_resource.database_template || 'cakephp/database.php.erb'
+    cookbook new_resource.database_template ? new_resource.cookbook_name.to_s : 'application_php'
     owner new_resource.owner
     group new_resource.group
     mode 0644
     variables(
-      :database => new_resource.database
+      database: new_resource.database
     )
   end
-
 end
 
 def set_production_in_core
   Chef::Log.warn "Editing file: #{new_resource.release_path}/Config/core.php"
   file = Chef::Util::FileEdit.new("#{new_resource.release_path}/Config/core.php")
-  file.search_file_replace(%r{'debug',\s*1}, "'debug', 0")
+  file.search_file_replace(/'debug',\s*1/, "'debug', 0")
   file.write_file
 end
 

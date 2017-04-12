@@ -3,11 +3,11 @@ class ApplicationPhpCookbook
     class << self
       def included(klass)
         klass.send(:include, ApplicationCookbook::ResourceBase)
-        klass.attribute :database_master_role, :kind_of => String
-        klass.attribute :composer, :kind_of => [TrueClass, FalseClass], :default => false
-        klass.attribute :composer_command, :kind_of => String, :default => 'composer'
-        klass.attribute :composer_options, :kind_of => String
-        klass.attribute :pear_packages, :kind_of => [Array, Hash], :default => {}
+        klass.attribute :database_master_role, kind_of: String
+        klass.attribute :composer, kind_of: [TrueClass, FalseClass], default: false
+        klass.attribute :composer_command, kind_of: String, default: 'composer'
+        klass.attribute :composer_options, kind_of: String
+        klass.attribute :pear_packages, kind_of: [Array, Hash], default: {}
       end
     end
   end
@@ -19,7 +19,7 @@ class ApplicationPhpCookbook
         end
         klass.action(:before_migrate) do
           run_before_migrate_setup
-          if(new_resource.composer)
+          if new_resource.composer
             Chef::Log.info 'Running composer install'
             directory "#{new_resource.path}/shared/vendor" do
               owner new_resource.owner
@@ -38,7 +38,7 @@ class ApplicationPhpCookbook
               user new_resource.owner
             end
           else
-            unless(new_resource.pear_packages.empty?)
+            unless new_resource.pear_packages.empty?
               new_resource.pear_packages.each do |p_pkg, p_ver|
                 php_pear p_pkg do
                   action :install
@@ -50,7 +50,7 @@ class ApplicationPhpCookbook
         end
         # Stub things we probably won't define
         [:before_compile, :before_restart, :before_symlink, :after_restart].each do |key|
-          klass.action(key){}
+          klass.action(key) {}
         end
       end
     end

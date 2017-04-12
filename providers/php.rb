@@ -21,23 +21,21 @@ include ApplicationPhpCookbook::ProviderBase
 include Chef::Mixin::LanguageIncludeRecipe
 
 def load_current_resource
-  if(new_resource.pear_packages.empty? && !new_resource.packages.empty?)
+  if new_resource.pear_packages.empty? && !new_resource.packages.empty?
     new_resource.pear_packages new_resource.packages
   end
 end
 
 action :before_compile do
   include_recipe 'php'
-  if(new_resource.write_settings_file)
+  if new_resource.write_settings_file
     new_resource.local_settings_file 'LocalSettings.php' unless new_resource.local_settings_file
     new_resource.symlink_before_migrate[new_resource.local_settings_file_name] ||= new_resource.local_settings_file
   end
 end
 
 action :before_migrate do
-  if(new_resource.replace_database_info_file)
-    replace_db_info!
-  end
+  replace_db_info! if new_resource.replace_database_info_file
 end
 
 protected
@@ -48,16 +46,16 @@ def search_for_database
 end
 
 def create_configuration_files
-  if(new_resource.write_settings_file)
+  if new_resource.write_settings_file
     search_for_database
     template "#{new_resource.path}/shared/#{new_resource.local_settings_file_name}" do
       source new_resource.settings_template || "#{new_resource.local_settings_file_name}.erb"
       owner new_resource.owner
       group new_resource.group
-      mode "644"
+      mode '644'
       variables(
-        :path => "#{new_resource.path}/current",
-        :database => new_resource.database
+        path: "#{new_resource.path}/current",
+        database: new_resource.database
       )
     end
   end
@@ -66,11 +64,11 @@ end
 def replace_db_info!
   search_for_database
   path = ::File.join(new_resource.release_path, new_resource.replace_database_info_file)
-  if(::File.exists?(path))
+  if ::File.exist?(path)
     Chef::Log.warn "Editing file: #{path}"
     file = Chef::Util::FileEdit.new(path)
     new_resource.database.each do |key, value|
-      file.search_file_replace(%r{%%#{key}%%}, value)
+      file.search_file_replace(/%%#{key}%%/, value)
     end
     file.write_file
   else

@@ -2,13 +2,13 @@ include ApplicationPhpCookbook::ProviderBase
 
 def load_current_resource
   default_database = Mash.new(
-    :driver => 'mysql',
-    :host => 'localhost',
-    :database => 'database',
-    :username => 'root',
-    :password => '',
-    :charset => 'utf8',
-    :prefix => ''
+    driver: 'mysql',
+    host: 'localhost',
+    database: 'database',
+    username: 'root',
+    password: '',
+    charset: 'utf8',
+    prefix: ''
   )
   new_resource.database(
     Chef::Mixin::DeepMerge.merge(default_database, new_resource.database)
@@ -20,7 +20,7 @@ end
 
 action :before_compile do
   %w(
-    storage/cache storage/database storage/logs storage/sessions 
+    storage/cache storage/database storage/logs storage/sessions
     storage/views storage/work
   ).each do |dir|
     directory ::File.join(new_resource.path, 'shared', dir) do
@@ -47,14 +47,13 @@ def create_configuration_files
   new_resource.database[:host] = host if host
 
   template "#{new_resource.path}/shared/database.php" do
-    source new_resource.database_template || "laravel/database.php.erb"
-    cookbook new_resource.database_template ? new_resource.cookbook_name.to_s : "application_php"
+    source new_resource.database_template || 'laravel/database.php.erb'
+    cookbook new_resource.database_template ? new_resource.cookbook_name.to_s : 'application_php'
     owner new_resource.owner
     group new_resource.group
     mode 0644
     variables(
-      :database => new_resource.database
+      database: new_resource.database
     )
   end
-
 end

@@ -21,9 +21,9 @@ def load_current_resource
     'database.php' => ::File.join('.', new_resource.base_prefix, 'config/database.php')
   )
   new_resource.purge_before_symlink(%W(
-    #{::File.join('.', new_resource.base_prefix, 'logs')}
-    #{::File.join('.', new_resource.base_prefix, 'cache')}
-  ))
+                                      #{::File.join('.', new_resource.base_prefix, 'logs')}
+                                      #{::File.join('.', new_resource.base_prefix, 'cache')}
+                                    ))
 end
 
 action :before_compile do
@@ -44,15 +44,13 @@ def create_configuration_files
   new_resource.database[:hostname] = host if host
 
   template "#{new_resource.path}/shared/database.php" do
-    source new_resource.database_template || "codeigniter/database.php.erb"
-    cookbook new_resource.database_template ? new_resource.cookbook_name.to_s : "application_php"
+    source new_resource.database_template || 'codeigniter/database.php.erb'
+    cookbook new_resource.database_template ? new_resource.cookbook_name.to_s : 'application_php'
     owner new_resource.owner
     group new_resource.group
     mode 0644
     variables(
-      :database => new_resource.database
+      database: new_resource.database
     )
   end
-
 end
-
