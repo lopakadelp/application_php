@@ -2,7 +2,7 @@ class ApplicationPhpCookbook
   module ResourceBase
     class << self
       def included(klass)
-        klass.send(:include, ApplicationCookbook::ResourceBase)
+        klass.send(:include, PoiseApplication::AppMixin::Resource)
         klass.attribute :database_master_role, kind_of: String
         klass.attribute :composer, kind_of: [TrueClass, FalseClass], default: false
         klass.attribute :composer_command, kind_of: String, default: 'composer'
